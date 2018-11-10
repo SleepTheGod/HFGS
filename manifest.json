@@ -4,10 +4,10 @@
   "short_name": "HFGS",
   "version": "0.2.5.0",
   "icons": {
-    "16": "images/icon16.png",
-    "32": "images/icon32.png",
-    "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "16": "images/icons/black/16_2.png",
+    "32": "images/icons/black/32_2.png",
+    "48": "images/icons/black/48_2.png",
+    "128": "images/icons/black/128_1.png"
   },
   "version_name": "alpha 0.0.1.0",
   "description": "Various tools for gambling on HF!",
@@ -16,10 +16,10 @@
   "offline_enabled": false,
   "browser_action": {
     "default_icon": {
-      "16": "images/icon16.png",
-      "32": "images/icon32.png",
-      "48": "images/icon48.png",
-      "128": "images/icon128.png"
+      "16": "images/icons/black/16_2.png",
+      "32": "images/icons/black/32_2.png",
+      "48": "images/icons/black/48_2.png",
+      "128": "images/icons/black/128_1.png"
     }
   },
   "content_scripts": [
@@ -36,7 +36,6 @@
         "js/modules/blackjack/uiHelper.js",
         "js/modules/blackjack/gameHelper.js",
         "js/modules/blackjack/blackjack.js"
-
       ]
     },
     {
