@@ -144,8 +144,8 @@ function setGameResult(result) {
     // Overall
     overallTotalGames++
     HFBJ.totalGames = overallTotalGames;
-    overallTotalBet += wagerAmt
-    HFBJ.totalBet = overallTotalBet;;
+    overallTotalBet += parseInt(wagerAmt);
+    HFBJ.totalBet = overallTotalBet;
 
     if (bytesGained > 0) {
         overallTotalWon += bytesGained

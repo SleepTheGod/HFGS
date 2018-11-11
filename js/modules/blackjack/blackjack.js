@@ -1,9 +1,8 @@
-//var initialWager = 0; // Must be greater than 2 and less than 500
-var confirmEachGame; //= $("#manuallyConfirmGame").is(':checked'); // prompt for each new game (false for gamesPerSession)
-var gamesPerSession; // = $("#gamesPerSession").val();; // how many games to play automatically
-var runContinuously; // = $("#runContinuously").is(':checked'); // Run continuously
-var useMartingaleStrat// ; = $("#enableMartingaleStrategy").is(':checked'); // initial wager * multiplier on lose, reset after win
-var wagerMultiplier; // = $("#wagerMultiplier").val(); // Keep between 2-3 for consistent results
+var confirmEachGame; // prompt for each new game (false for gamesPerSession)
+var gamesPerSession; // how many games to play automatically
+var runContinuously; // Run continuously
+var useMartingaleStrat // initial wager * multiplier on lose, reset after win
+var wagerMultiplier; // Keep between 2-3 for consistent results
 
 // ------------------------------- Script -------------------------------
 /* ========== DO NOT CHANGE ANYTHING BELOW THIS LINE ========== */
@@ -46,6 +45,7 @@ var overallTotalBet = HFBJ.totalBet;
 var overallTotalWon = HFBJ.totalWon;
 var overallTotalNet = HFBJ.totalWon - HFBJ.totalBet;
 var wagerAmt = 0;
+var initialWager = 0;
 var dealHandBody = "";
 
 // Append warning
@@ -65,6 +65,7 @@ $("#toggleBJBot").click(function () {
         if (confirm("Are you sure you want to start the script?")) {
             setWagerTotal();
             dealHandBody = "bet=" + wagerAmt + "&my_post_key=" + myPostKey;
+            initialWager = wagerAmt;
             hfPostRequest(hfActionDealURL, dealHandBody, true);
         }
     } else {

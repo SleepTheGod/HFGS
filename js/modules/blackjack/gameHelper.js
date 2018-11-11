@@ -1,22 +1,36 @@
 function startNextGame() {
     if (isBotRunning) {
         setTimeout(function () {
-            if (confirmEachGame) {
-                if (confirm("Play Again?")) {
-                    console.clear();
-                    hfPostRequest(hfActionDealURL, dealHandBody, true);
-                }
+            // Continuously
+            if (runContinuously) {
+                startNewGameConfirm();
             } else {
                 if (gamesPlayed < gamesPerSession) {
                     gamesPlayed++;
-                    console.clear();
-                    hfPostRequest(hfActionDealURL, dealHandBody, true);
+                    startNewGameConfirm();
                 } else {
                     alert("DONE RUNNING!");
                     gamesPlayed = 0;
+                    isBotRunning = false;
+                    $("#toggleBJBot").text("Start Bot");
                 }
             }
         }, 1000);
+    }
+}
+
+function startNewGameConfirm() {
+    if (confirmEachGame) {
+        if (confirm("Play Again?")) {
+            console.clear();
+            hfPostRequest(hfActionDealURL, dealHandBody, true);
+        } else {
+            isBotRunning = false;
+            $("#toggleBJBot").text("Start Bot");
+        }
+    } else {
+        console.clear();
+        hfPostRequest(hfActionDealURL, dealHandBody, true);
     }
 }
 
@@ -27,7 +41,7 @@ function updateWagerAmount(jsonObj) {
         ) {
             // Increase
             wagerAmt = wagerAmt * wagerMultiplier;
-            if (wagerAmt > 500){
+            if (wagerAmt > 500) {
                 wagerAmt = 500;
             }
         } else if (jsonObj.data.outcome1 == "WIN-BLACKJACK"

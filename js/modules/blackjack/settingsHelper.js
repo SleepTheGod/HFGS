@@ -1,4 +1,3 @@
-localStorage.removeItem('hf-bj-settings');
 var HFBJSettings = localStorage.getItem('hf-bj-settings');
 
 function appendSettings() {
