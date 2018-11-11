@@ -1,8 +1,10 @@
-const initialWager = 2; // Must be greater than 2 and less than 500
-const confirmEachGame = false; // prompt for each new game (false for gamesPerSession)
-const gamesPerSession = 10; // how many games to play automatically
-const useMartingaleStrat = true; // initial wager * multiplier on lose, reset after win
-const wagerMultiplier = 2.25; // Keep between 2-3 for consistent results
+//var initialWager = 0; // Must be greater than 2 and less than 500
+var confirmEachGame; //= $("#manuallyConfirmGame").is(':checked'); // prompt for each new game (false for gamesPerSession)
+var gamesPerSession; // = $("#gamesPerSession").val();; // how many games to play automatically
+var runContinuously; // = $("#runContinuously").is(':checked'); // Run continuously
+var useMartingaleStrat// ; = $("#enableMartingaleStrategy").is(':checked'); // initial wager * multiplier on lose, reset after win
+var wagerMultiplier; // = $("#wagerMultiplier").val(); // Keep between 2-3 for consistent results
+
 // ------------------------------- Script -------------------------------
 /* ========== DO NOT CHANGE ANYTHING BELOW THIS LINE ========== */
 /* Global Constants */
@@ -31,7 +33,6 @@ var origByteBalance;
 var currentBalance = Math.max(0, parseInt($("#balanceCounterBalance").text()));
 var newByteBalance;
 var HFBJ = localStorage.getItem('hf-bj');
-console.clear();
 initializeLogFromMemory(); // Init Log
 // Current Game Stats
 var isBotRunning = false;
@@ -44,18 +45,17 @@ var overallTotalGames = HFBJ.totalGames;
 var overallTotalBet = HFBJ.totalBet;
 var overallTotalWon = HFBJ.totalWon;
 var overallTotalNet = HFBJ.totalWon - HFBJ.totalBet;
-var wagerAmt = initialWager;
-var dealHandBody = "bet=" + wagerAmt + "&my_post_key=" + myPostKey;
-
-
+var wagerAmt = 0;
+var dealHandBody = "";
 
 // Append warning
 $('strong:contains("Risk your Bytes for a chance to win more!")').parent().parent()
-    .after($("<tr>").css("color", "red").text("HF Blackjack Userscript: USE AT YOUR OWN RISK!"));
+    .after($("<tr>").css("color", "red").text("HF Gambling Suite: USE AT YOUR OWN RISK!"));
 
 // Append UI Changes
 appendSettings();
 initialStats();
+console.clear();
 
 // Toggle Bot click event
 $("#toggleBJBot").click(function () {
@@ -64,6 +64,7 @@ $("#toggleBJBot").click(function () {
         $("#toggleBJBot").text("Stop Bot");
         if (confirm("Are you sure you want to start the script?")) {
             setWagerTotal();
+            dealHandBody = "bet=" + wagerAmt + "&my_post_key=" + myPostKey;
             hfPostRequest(hfActionDealURL, dealHandBody, true);
         }
     } else {
@@ -80,11 +81,6 @@ $("#setBJBotMemory").click(function () {
 });
 
 /* Functions */
-
-
-
-
-
 function initializeLogFromMemory() {
     if (HFBJ === null) {
         HFBJ = {

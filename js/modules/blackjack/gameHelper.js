@@ -27,6 +27,9 @@ function updateWagerAmount(jsonObj) {
         ) {
             // Increase
             wagerAmt = wagerAmt * wagerMultiplier;
+            if (wagerAmt > 500){
+                wagerAmt = 500;
+            }
         } else if (jsonObj.data.outcome1 == "WIN-BLACKJACK"
             || jsonObj.data.outcome1 == "WIN") {
             // Reset
