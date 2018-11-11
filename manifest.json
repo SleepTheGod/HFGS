@@ -35,6 +35,7 @@
         "js/modules/blackjack/requestsHelper.js",
         "js/modules/blackjack/uiHelper.js",
         "js/modules/blackjack/gameHelper.js",
+        "js/modules/blackjack/settingsHelper.js",
         "js/modules/blackjack/blackjack.js"
       ]
     },

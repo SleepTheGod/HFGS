@@ -23,9 +23,7 @@ function startNextGame() {
 function updateWagerAmount(jsonObj) {
     if (useMartingaleStrat) {
         if (jsonObj.data.outcome1 == "FOLD"
-            //|| jsonObj.data.outcome1 == "TIE"
             || jsonObj.data.outcome1 == "LOSE"
-            //|| jsonObj.data.outcome1 == "SURRENDER"
         ) {
             // Increase
             wagerAmt = wagerAmt * wagerMultiplier;
@@ -35,6 +33,7 @@ function updateWagerAmount(jsonObj) {
             wagerAmt = initialWager;
         }
     }
+    $("#wagerAmt").text(wagerAmt);
     dealHandBody = "bet=" + wagerAmt + "&my_post_key=" + myPostKey;
 }
 

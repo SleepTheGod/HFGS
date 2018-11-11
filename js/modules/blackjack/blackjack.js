@@ -1,7 +1,7 @@
 const initialWager = 2; // Must be greater than 2 and less than 500
-const confirmEachGame = true; // prompt for each new game (false for gamesPerSession)
-const gamesPerSession = 5; // how many games to play automatically
-const useMartingaleStrat = false; // initial wager * multiplier on lose, reset after win
+const confirmEachGame = false; // prompt for each new game (false for gamesPerSession)
+const gamesPerSession = 10; // how many games to play automatically
+const useMartingaleStrat = true; // initial wager * multiplier on lose, reset after win
 const wagerMultiplier = 2.25; // Keep between 2-3 for consistent results
 // ------------------------------- Script -------------------------------
 /* ========== DO NOT CHANGE ANYTHING BELOW THIS LINE ========== */
@@ -53,7 +53,8 @@ var dealHandBody = "bet=" + wagerAmt + "&my_post_key=" + myPostKey;
 $('strong:contains("Risk your Bytes for a chance to win more!")').parent().parent()
     .after($("<tr>").css("color", "red").text("HF Blackjack Userscript: USE AT YOUR OWN RISK!"));
 
-// Update original bytes
+// Append UI Changes
+appendSettings();
 initialStats();
 
 // Toggle Bot click event
