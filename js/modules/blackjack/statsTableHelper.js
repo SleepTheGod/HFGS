@@ -3,7 +3,7 @@ function initialStats() {
     const hrAttribute = { "width": "175px", "align": "left" };
     const centerCSS = { "display": "flex", "justify-content": "center" };
     const tableCSS = { "display": "inline-block", "width": "175px", "text-align": "left" };
-    overallTotalNet = (HFBJ.totalWon - HFBJ.totalBet) + HFBJ.totalWon;
+    overallTotalNet = HFBJ.totalWon - HFBJ.totalBet;
 
     $("#PageContainer").parent().css("width", "800px");
     $("#PageContainer").parent().after($("<td>").addClass("trow1")
@@ -93,8 +93,8 @@ function clearStats() {
 
 function updateStats(clearValues) {
     if (!clearValues) {
-        sessionNet = (sessionTotalWon - sessionTotalBet) + sessionTotalWon;
-        overallTotalNet = (HFBJ.totalWon - HFBJ.totalBet) + HFBJ.totalWon;
+        sessionNet = sessionTotalWon - sessionTotalBet;
+        overallTotalNet = HFBJ.totalWon - HFBJ.totalBet;
     }
     // Update stats table
     $("#wagerAmt").text(wagerAmt);

@@ -110,27 +110,38 @@ function setGameResult(result) {
     switch (result) {
         case "WIN-BLACKJACK":
             bytesGained = wagerAmt * winBlackJackMultiplier;
+            sessionTotalBet += wagerAmt;
+            overallTotalBet += wagerAmt;
             break;
         case "WIN":
             bytesGained = wagerAmt * winMultiplier;
+            sessionTotalBet += wagerAmt;
+            overallTotalBet += wagerAmt;
             break;
         case "TIE":
             bytesGained = wagerAmt * tieMultiplier;
             break;
         case "FOLD":
             bytesGained = wagerAmt * loseMultiplier;
+            sessionTotalBet += wagerAmt;
+            overallTotalBet += wagerAmt;
             break;
         case "LOSE":
             bytesGained = wagerAmt * loseMultiplier;
+            sessionTotalBet += wagerAmt;
+            overallTotalBet += wagerAmt;
             break;
         case "SURRENDER":
             bytesGained = wagerAmt * surrenderMultiplier;
+            sessionTotalBet += Math.abs(bytesGained);
             break;
         default:
             bytesGained = 0;
     }
     if (bestAction == "double"){
         bytesGained = bytesGained * 2;
+        overallTotalBet += Math.abs(bytesGained);
+        sessionTotalBet += (bytesGained * 2);
     }
     // Add log entry
     var dateTimeNow = new Date().getTime();
@@ -139,14 +150,6 @@ function setGameResult(result) {
     // Session
     latestWinAmt = bytesGained;
     sessionTotalGames++;
-    // Remove if if causes logic issues
-    if (result == "SURRENDER"){
-        sessionTotalBet += Math.abs(bytesGained);
-    } else if (result == "DOUBLE"){
-        sessionTotalBet += (bytesGained * 2);
-    }else if (result !== "TIE"){
-        sessionTotalBet += wagerAmt;
-    }
     if (bytesGained > 0) {
         sessionTotalWon += bytesGained;
     }
@@ -155,15 +158,7 @@ function setGameResult(result) {
     overallTotalGames++
     HFBJ.totalGames = overallTotalGames;
     // Remove if if causes logic issues
-    if (result == "SURRENDER"){
-        overallTotalBet += Math.abs(bytesGained);
-    } else if (result == "DOUBLE"){
-        overallTotalBet += (wagerAmt * 2);
-    }else if (result !== "TIE"){
-        overallTotalBet += wagerAmt;
-    }
     HFBJ.totalBet = overallTotalBet;
-
     if (bytesGained > 0) {
         overallTotalWon += bytesGained
         HFBJ.totalWon = overallTotalWon;
