@@ -141,21 +141,25 @@ function setGameResult(result) {
     sessionTotalGames++;
     // Remove if if causes logic issues
     if (result == "SURRENDER"){
-        sessionTotalBet += bytesGained;
-    } else if (result !== "TIE"){
+        sessionTotalBet += Math.abs(bytesGained);
+    } else if (result == "DOUBLE"){
+        sessionTotalBet += (bytesGained * 2);
+    }else if (result !== "TIE"){
         sessionTotalBet += wagerAmt;
     }
     if (bytesGained > 0) {
         sessionTotalWon += bytesGained;
     }
-    sessionNet = sessionTotalWon - (sessionTotalBet - sessionTotalWon);
+    sessionNet = sessionTotalWon - sessionTotalBet;
     // Overall
     overallTotalGames++
     HFBJ.totalGames = overallTotalGames;
     // Remove if if causes logic issues
     if (result == "SURRENDER"){
-        overallTotalBet += bytesGained;
-    } else if (result !== "TIE"){
+        overallTotalBet += Math.abs(bytesGained);
+    } else if (result == "DOUBLE"){
+        overallTotalBet += (wagerAmt * 2);
+    }else if (result !== "TIE"){
         overallTotalBet += wagerAmt;
     }
     HFBJ.totalBet = overallTotalBet;
@@ -164,7 +168,7 @@ function setGameResult(result) {
         overallTotalWon += bytesGained
         HFBJ.totalWon = overallTotalWon;
     }
-    overallTotalNet = (HFBJ.totalWon - HFBJ.totalBet) + HFBJ.totalWon;
+    overallTotalNet = HFBJ.totalWon - HFBJ.totalBet;
     localStorage.setItem('hf-bj', JSON.stringify(HFBJ));
     updateStats(false);
 }
