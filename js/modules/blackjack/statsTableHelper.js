@@ -82,7 +82,12 @@ function clearStats() {
     overallTotalBet = 0;
     overallTotalWon = 0;
     overallTotalNet = 0;
-    HFBJ.logs = [];
+    HFBJ = {
+        totalGames: 0,
+        totalBet: 0,
+        totalWon: 0,
+        logs: [],
+    };
     updateStats(true);
 }
 

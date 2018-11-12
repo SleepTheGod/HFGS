@@ -129,6 +129,9 @@ function setGameResult(result) {
         default:
             bytesGained = 0;
     }
+    if (bestAction == "double"){
+        bytesGained = bytesGained * 2;
+    }
     // Add log entry
     var dateTimeNow = new Date().getTime();
     var logEntry = { "Date": dateTimeNow, "Result": result, "AmountWon": bytesGained, "AmountWagered": wagerAmt };
@@ -136,15 +139,25 @@ function setGameResult(result) {
     // Session
     latestWinAmt = bytesGained;
     sessionTotalGames++;
-    sessionTotalBet += wagerAmt;
+    // Remove if if causes logic issues
+    if (result == "SURRENDER"){
+        sessionTotalBet += bytesGained;
+    } else if (result !== "TIE"){
+        sessionTotalBet += wagerAmt;
+    }
     if (bytesGained > 0) {
         sessionTotalWon += bytesGained;
     }
-    sessionNet = (sessionTotalWon - sessionTotalBet) + sessionTotalWon;
+    sessionNet = sessionTotalWon - (sessionTotalBet - sessionTotalWon);
     // Overall
     overallTotalGames++
     HFBJ.totalGames = overallTotalGames;
-    overallTotalBet += parseInt(wagerAmt);
+    // Remove if if causes logic issues
+    if (result == "SURRENDER"){
+        overallTotalBet += bytesGained;
+    } else if (result !== "TIE"){
+        overallTotalBet += wagerAmt;
+    }
     HFBJ.totalBet = overallTotalBet;
 
     if (bytesGained > 0) {

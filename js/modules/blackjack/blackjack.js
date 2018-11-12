@@ -47,6 +47,7 @@ var overallTotalNet = HFBJ.totalWon - HFBJ.totalBet;
 var wagerAmt = 0;
 var initialWager = 0;
 var dealHandBody = "";
+var bestAction = "";
 
 // Append warning
 $('strong:contains("Risk your Bytes for a chance to win more!")').parent().parent()
