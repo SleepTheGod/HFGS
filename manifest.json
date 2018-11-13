@@ -1,15 +1,15 @@
-﻿{
+{
   "manifest_version": 2,
   "name": "HF Gambling Suite",
   "short_name": "HFGS",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icons": {
     "16": "images/icons/black/16_2.png",
     "32": "images/icons/black/32_2.png",
     "48": "images/icons/black/48_2.png",
     "128": "images/icons/black/128_1.png"
   },
-  "version_name": "beta 1.0.0",
+  "version_name": "beta 1.0.1",
   "description": "Various tools for gambling on HF!",
   "incognito": "spanning",
   "author": "xadamxk",
