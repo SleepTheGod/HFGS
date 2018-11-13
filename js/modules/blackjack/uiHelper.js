@@ -107,27 +107,41 @@ function setGameResult(result) {
     const tieMultiplier = 0;
     const loseMultiplier = -1;
     const surrenderMultiplier = -.5;
+    var tempAmt = 0;
     switch (result) {
         case "WIN-BLACKJACK":
             bytesGained = wagerAmt * winBlackJackMultiplier;
+            tempAmt = wagerAmt;
             break;
         case "WIN":
             bytesGained = wagerAmt * winMultiplier;
+            tempAmt = wagerAmt;
             break;
         case "TIE":
             bytesGained = wagerAmt * tieMultiplier;
+            tempAmt = 0;
             break;
         case "FOLD":
             bytesGained = wagerAmt * loseMultiplier;
+            tempAmt = wagerAmt;
             break;
         case "LOSE":
             bytesGained = wagerAmt * loseMultiplier;
+            tempAmt = wagerAmt;
             break;
         case "SURRENDER":
             bytesGained = wagerAmt * surrenderMultiplier;
+            tempAmt = Math.abs(bytesGained);
             break;
         default:
             bytesGained = 0;
+    }
+    if (bestAction == "double"){
+        sessionTotalBet += (bytesGained * 2);
+        overallTotalBet += (bytesGained * 2);
+    } else {
+        sessionTotalBet += Math.abs(tempAmt);
+        overallTotalBet += Math.abs(tempAmt);
     }
     // Add log entry
     var dateTimeNow = new Date().getTime();
@@ -136,22 +150,25 @@ function setGameResult(result) {
     // Session
     latestWinAmt = bytesGained;
     sessionTotalGames++;
-    sessionTotalBet += wagerAmt;
     if (bytesGained > 0) {
         sessionTotalWon += bytesGained;
+    } else if (bytesGained < 0){
+        sessionTotalLost += Math.abs(bytesGained);
     }
-    sessionNet = (sessionTotalWon - sessionTotalBet) + sessionTotalWon;
+    sessionNet = sessionTotalWon - sessionTotalLost;
     // Overall
     overallTotalGames++
     HFBJ.totalGames = overallTotalGames;
-    overallTotalBet += parseInt(wagerAmt);
+    // Remove if if causes logic issues
     HFBJ.totalBet = overallTotalBet;
-
     if (bytesGained > 0) {
         overallTotalWon += bytesGained
         HFBJ.totalWon = overallTotalWon;
-    }
-    overallTotalNet = (HFBJ.totalWon - HFBJ.totalBet) + HFBJ.totalWon;
+    } else if (bytesGained < 0){
+        overallTotalLost += Math.abs(bytesGained);
+        HFBJ.totalLost = overallTotalLost;
+    } 
+    overallTotalNet = overallTotalWon - overallTotalLost;
     localStorage.setItem('hf-bj', JSON.stringify(HFBJ));
     updateStats(false);
 }

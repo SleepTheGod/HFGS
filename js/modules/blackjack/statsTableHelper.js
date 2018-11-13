@@ -3,7 +3,7 @@ function initialStats() {
     const hrAttribute = { "width": "175px", "align": "left" };
     const centerCSS = { "display": "flex", "justify-content": "center" };
     const tableCSS = { "display": "inline-block", "width": "175px", "text-align": "left" };
-    overallTotalNet = (HFBJ.totalWon - HFBJ.totalBet) + HFBJ.totalWon;
+    overallTotalNet = HFBJ.totalWon - HFBJ.totalLost;
 
     $("#PageContainer").parent().css("width", "800px");
     $("#PageContainer").parent().after($("<td>").addClass("trow1")
@@ -77,19 +77,27 @@ function clearStats() {
     sessionTotalGames = 0;
     sessionTotalBet = 0;
     sessionTotalWon = 0;
+    sessionTotalLost = 0;
     sessionNet = 0;
     overallTotalGames = 0;
     overallTotalBet = 0;
     overallTotalWon = 0;
+    overallTotalLost = 0;
     overallTotalNet = 0;
-    HFBJ.logs = [];
+    HFBJ = {
+        totalGames: 0,
+        totalBet: 0,
+        totalWon: 0,
+        totalLost: 0,
+        logs: [],
+    };
     updateStats(true);
 }
 
 function updateStats(clearValues) {
     if (!clearValues) {
-        sessionNet = (sessionTotalWon - sessionTotalBet) + sessionTotalWon;
-        overallTotalNet = (HFBJ.totalWon - HFBJ.totalBet) + HFBJ.totalWon;
+        sessionNet = sessionTotalWon - sessionTotalLost;
+        overallTotalNet = HFBJ.totalWon - HFBJ.totalLost;
     }
     // Update stats table
     $("#wagerAmt").text(wagerAmt);

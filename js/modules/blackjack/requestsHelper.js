@@ -61,17 +61,17 @@ function advisorPostRequest(url, data) {
             // Set hand total value
             updateYourHandTotal(jsonObj.sum);
             // Desired Action - On HF
-            if (jsonObj.best == "stand") {
+            bestAction = jsonObj.best;
+            if (bestAction == "stand") {
                 hfPostRequest(hfActionStandURL, generateHFRawData(), false);
-            } else if (jsonObj.best == "hit") {
+            } else if (bestAction == "hit") {
                 hfPostRequest(hfActionHitURL, generateHFRawData(), true);
-            } else if (jsonObj.best == "double") {
+            } else if (bestAction == "double") {
                 hfPostRequest(hfActionDoubleURL, generateHFRawData(), true);
-            } else if (jsonObj.best == "split") {
+            } else if (bestAction == "split") {
                 // TODO: Additional Logic for actual split
-                //hfPostRequest(hfActionSplitURL, generateHFRawData(), false);
                 hfPostRequest(hfActionStandURL, generateHFRawData(), false);
-            } else if (jsonObj.best == "surrender") {
+            } else if (bestAction == "surrender") {
                 hfPostRequest(hfActionSurrenderURL, generateHFRawData(), false);
             }
         }
