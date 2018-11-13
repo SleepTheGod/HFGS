@@ -39,11 +39,13 @@ var latestWinAmt = 0;// TODO: Get value from local storage
 var sessionTotalGames = 0;
 var sessionTotalBet = 0;
 var sessionTotalWon = 0;
+var sessionTotalLost = 0;
 var sessionNet = 0;
 var overallTotalGames = HFBJ.totalGames;
 var overallTotalBet = HFBJ.totalBet;
 var overallTotalWon = HFBJ.totalWon;
-var overallTotalNet = HFBJ.totalWon - HFBJ.totalBet;
+var overallTotalLost = HFBJ.totalLost;
+var overallTotalNet = HFBJ.totalWon - HFBJ.totalLost;
 var wagerAmt = 0;
 var initialWager = 0;
 var dealHandBody = "";
@@ -89,6 +91,7 @@ function initializeLogFromMemory() {
             totalGames: 0,
             totalBet: 0,
             totalWon: 0,
+            totalLost: 0,
             logs: [],
 
         }
