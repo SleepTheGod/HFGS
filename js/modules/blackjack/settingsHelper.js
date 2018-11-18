@@ -96,9 +96,9 @@ function appendSettings() {
         // Set variable
         useMartingaleStrat = $(this).is(':checked');
         if (useMartingaleStrat) {
-            $("#wagerMultiplier").prop("disabled", true).css("display", "none");
+            $("#wagerMultiplier").prop("disabled", true).css("display", "");
         } else {
-            $("#wagerMultiplier").prop("disabled", false).css("display", "");
+            $("#wagerMultiplier").prop("disabled", false).css("display", "none");
         }
         // Save Settings
         saveSettings();
