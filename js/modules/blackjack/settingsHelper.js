@@ -3,7 +3,6 @@ var HFBJSettings = localStorage.getItem('hf-bj-settings');
 function appendSettings() {
     var fieldSetCSS = { "margin": "8 px", "border": "1px solid #0e0e0e", "padding": "8px", "border-radius": "4px" };
 
-    // TODO: Snag Settings before appending
     $('td:contains("Disclaimer:  This blackjack table uses HF Bytes points which is our internal rewards system.")').parent()
         .before($("<tr>").append($("<td>").attr("colspan", "2").addClass("trow1").append($("<div>")
             .append($("<fieldset>").css(fieldSetCSS)
