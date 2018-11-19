@@ -45,7 +45,8 @@
         "*://hackforums.net/slots.php"
       ],
       "js": [
-        "js/dependencies/jquery-3.2.1.js"
+        "js/dependencies/jquery-3.2.1.js",
+        "js/modules/slots/slots.js"
       ]
     }
   ],
