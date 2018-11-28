@@ -1,6 +1,7 @@
 /* Global Constants */
 const myPostKey = document.getElementsByTagName('head')[0].innerHTML.split('my_post_key = "')[1].split('";')[0];
 const hfActionSlotsURL = "https://hackforums.net/slots/spin.php";
+const gameDelayInMillis = 1000;
 // Reel Math
 const numIconsPerReel = 6; // Number of icons per reel
 const stripHeight = 720; // Height of reel image in pixels
@@ -8,11 +9,11 @@ const alignmentOffset = 86; // Offset for reel to match container
 // Reel Animations
 const positioningTime = 0; // default: 200
 const bounceHeight = 0; // default: 200
-const bounceTime = 100; // default: 1000
+const bounceTime = 0; // default: 1000
 
 var spinHandBody = "";
 /* Global Variables */
-var gamesPerSession; // how many games to play automatically
+var gamesPerSession = 25; // how many games to play automatically
 var slotsResponse;
 var windowID;
 var gamesPlayed = 0;
@@ -22,7 +23,9 @@ var betAmount = parseInt($("#bet").text());
 //initializeLogFromMemory(); // Init Log
 // Current Game Stats
 var isBotRunning = false;
+var confirmEachGame = true;
 
+initializeLogFromMemory();
 appendSlotsUI();
 
 // Toggle Bot click event
@@ -31,11 +34,25 @@ $("#toggleSlotBot").click(function () {
         isBotRunning = true;
         $("#toggleSlotBot").text("Stop Bot");
         if (confirm("Are you sure you want to start the slots bot?")) {
-            gameLogic();
+            gameLogic(true);
         }
     } else {
         isBotRunning = false;
         $("#toggleSlotBot").text("Start Bot");
+    }
+});
+
+$("#setSlotBotMemory").click(function () {
+    if (confirm("Are you sure you want to clear all log history?")) {
+        localStorage.removeItem('hf-gs');
+        HFGS.logs = {
+            totalGames: 0,
+            totalBet: 0,
+            totalWon: 0,
+            totalLost: 0,
+            logs: [],
+        };
+        updateHistoryTable();
     }
 });
 
@@ -92,35 +109,121 @@ function appendSlotsUI() {
             )
         )
     );
-    clearHistoryTable(true);
+    //clearHistoryTable(true);
+    updateHistoryTable();
 }
 
-function gameLogic() {
-    // Start Game
-    startReel(1, 0);
-    startReel(2, 0);
-    startReel(3, 0);
-    hfSlotsPostRequest(hfActionSlotsURL, setSpinHandBody());
+function gameLogic(isFreshStart) {
+    if (gamesPlayed < gamesPerSession) {
+        var startGame = true;
+        if (confirmEachGame && !isFreshStart) {
+            if (!confirm("Play slots again?")) {
+                startGame = false;
+                isBotRunning = false;
+                $("#toggleSlotBot").text("Start Bot");
+            }
+        }
+        if (startGame) {
+            startReel(1, 0);
+            startReel(2, 0);
+            startReel(3, 0);
+            hfSlotsPostRequest(hfActionSlotsURL, setSpinHandBody());
+        }
+    } else {
+        isBotRunning = false;
+        $("#toggleSlotBot").text("Start Bot");
+    }
 }
 
 function hfSlotsPostRequest(url, data) {
     //
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: data,
-        async: false,
-        success: function (data) {
-            // {"reels":["5.0","3.0","3.5"],"prize":null,"success":true,"credits":1771,"dayWinnings":0,"lifetimeWinnings":1201}
-            var jsonObj = jQuery.parseJSON(data);
-            console.log(jsonObj);
-            // Stop Reels
-            stopReels(jsonObj);
-            // Set current bytes
-            currentBalance = jsonObj.credits;
-            $("#credits").text(currentBalance);
+    setTimeout(function () {
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            async: false,
+            success: function (data) {
+                // {"reels":["5.0","3.0","3.5"],"prize":null,"success":true,"credits":1771,"dayWinnings":0,"lifetimeWinnings":1201}
+                var jsonObj = jQuery.parseJSON(data);
+                console.log(jsonObj);
+                gamesPlayed++;
+                // Stop Reels
+                stopReels(jsonObj);
+                // Set current bytes
+                currentBalance = jsonObj.credits;
+                $("#credits").text(currentBalance);
+                // Determine Game Outcome
+                determineGameOutcome(jsonObj);
+                // Next Game
+                gameLogic(false);
+            }
+        });
+    }, gameDelayInMillis);
+}
+
+function determineGameOutcome(jsonObj) {
+    var result;
+    var bytesGained;
+    // If Loss
+    if (jsonObj.prize == null) {
+        result = "LOSS";
+        bytesGained = -1 * betAmount;
+    } else {
+        result = "WIN";
+        bytesGained = jsonObj.prize.payoutWinnings;
+        // TODO: Highlight winning row? #trPrize_ + jsonObj.prize.id (returns row won) add whatever win class is
+        // TODO: Also remove win once next game starts
+    }
+    // Add log entry
+    var dateTimeNow = new Date().getTime();
+    var logEntry = { "Date": dateTimeNow, "Result": result, "AmountWon": bytesGained, "AmountWagered": betAmount };
+    HFGS.logs.push(logEntry);
+    localStorage.setItem('hf-gs', JSON.stringify(HFGS));
+    updateHistoryTable();
+}
+
+function updateHistoryTable() {
+    if (HFGS.logs.length > 0) {
+        const trCSS = {};
+        const tdRightAlignAttribute = { "align": "right" };
+        const dateFormat = {
+            day: '2-digit', month: '2-digit', year: '2-digit',
+            hour: '2-digit', minute: '2-digit'
+        };
+        clearHistoryTable(false);
+        // http://www.javascripttutorial.net/javascript-array-sort/
+        var tempLog = HFGS.logs.sort(function (x, y) {
+            return y.Date - x.Date;
+        });
+        $.each(HFGS.logs, function (index, value) {
+            $("#historyTabletbody").append($("<tr>").css(trCSS)
+                .append($("<td>").addClass("trow1").attr("colspan", "1")
+                    .append($("<strong>").text(value.Result).css("color", getResultColor(value.Result))))
+                .append($("<td>").addClass("trow1").attr("colspan", "1")
+                    .append($("<strong>").text(new Date(value.Date).toLocaleTimeString([], dateFormat))))
+                .append($("<td>").addClass("trow1").attr("colspan", "1").attr(tdRightAlignAttribute)
+                    .append($("<strong>").text(value.AmountWagered)))
+                .append($("<td>").addClass("trow1").attr("colspan", "1").attr(tdRightAlignAttribute)
+                    .append($("<strong>").text(value.AmountWon).css("color", getAmountColor(value.AmountWon))))
+            )
+        });
+        HFGS.logs = tempLog;
+    } else {
+        clearHistoryTable(true);
+    }
+}
+
+function clearHistoryTable(isFreshClear) {
+    $("#historyTabletbody").find("tr").each(function (index) {
+        if (index > 1) {
+            $(this).remove();
         }
     });
+    if (isFreshClear) {
+        $("#historyTabletbody").append($("<tr>").append($("<td>").addClass("trow1").attr("colspan", "4")
+            .append($("<strong>").text("No History Found"))));
+    }
 }
 
 function setSpinHandBody() {
@@ -218,4 +321,41 @@ function retrieveWindowVariables(variables) {
     $("#tmpScript").remove();
 
     return ret;
+}
+
+function getResultColor(result) {
+    var color = "#C3C3C3";
+    switch (result) {
+        case "WIN": color = "#C5B358";
+            break;
+        case "LOSS": color = "#ff1919";
+            break;
+        default: color = "#949494";
+    }
+    return color;
+}
+
+function getAmountColor(amount) {
+    var color = "#C3C3C3";
+    if (amount > 0) {
+        color = "#00B500";
+    } else if (amount < 0) {
+        color = "#FF2121";
+    }
+    return color;
+}
+
+function initializeLogFromMemory() {
+    if (HFGS === null) {
+        HFGS = {
+            totalGames: 0,
+            totalBet: 0,
+            totalWon: 0,
+            totalLost: 0,
+            logs: [],
+
+        }
+    } else {
+        HFGS = JSON.parse(HFGS);
+    }
 }
