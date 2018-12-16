@@ -14,6 +14,7 @@ const bounceTime = 0; // default: 1000
 var spinHandBody = "";
 /* Global Variables */
 var gamesPerSession = 25; // how many games to play automatically
+var confirmEachGame = false; // confirm before each game
 var slotsResponse;
 var windowID;
 var gamesPlayed = 0;
@@ -23,7 +24,6 @@ var betAmount = parseInt($("#bet").text());
 //initializeLogFromMemory(); // Init Log
 // Current Game Stats
 var isBotRunning = false;
-var confirmEachGame = true;
 
 initializeLogFromMemory();
 appendSlotsUI();
@@ -45,7 +45,7 @@ $("#toggleSlotBot").click(function () {
 $("#setSlotBotMemory").click(function () {
     if (confirm("Are you sure you want to clear all log history?")) {
         localStorage.removeItem('hf-gs');
-        HFGS.logs = {
+        HFGS = {
             totalGames: 0,
             totalBet: 0,
             totalWon: 0,
@@ -114,7 +114,7 @@ function appendSlotsUI() {
 }
 
 function gameLogic(isFreshStart) {
-    if (gamesPlayed < gamesPerSession) {
+    if (gamesPlayed < gamesPerSession && isBotRunning) {
         var startGame = true;
         if (confirmEachGame && !isFreshStart) {
             if (!confirm("Play slots again?")) {
@@ -165,6 +165,16 @@ function hfSlotsPostRequest(url, data) {
 function determineGameOutcome(jsonObj) {
     var result;
     var bytesGained;
+    /*
+    HFGS = {
+            totalGames: 0,
+            totalBet: 0,
+            totalWon: 0,
+            totalLost: 0,
+            logs: [],
+
+        }
+        */
     // If Loss
     if (jsonObj.prize == null) {
         result = "LOSS";
