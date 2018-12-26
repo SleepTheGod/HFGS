@@ -65,7 +65,7 @@ $("#toggleBJBot").click(function () {
     if (!isBotRunning) {
         isBotRunning = true;
         $("#toggleBJBot").text("Stop Bot");
-        if (confirm("Are you sure you want to start the script?")) {
+        if (confirm("Are you sure you want to start the blackjack bot?")) {
             setWagerTotal();
             dealHandBody = "bet=" + wagerAmt + "&my_post_key=" + myPostKey;
             initialWager = wagerAmt;
