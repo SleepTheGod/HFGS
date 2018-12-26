@@ -136,7 +136,7 @@ function setGameResult(result) {
         default:
             bytesGained = 0;
     }
-    if (bestAction == "double"){
+    if (bestAction.toUpperCase() === "DOUBLE"){
         sessionTotalBet += (bytesGained * 2);
         overallTotalBet += (bytesGained * 2);
     } else {
