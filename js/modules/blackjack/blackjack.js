@@ -8,7 +8,7 @@ var wagerMultiplier; // Keep between 2-3 for consistent results
 /* ========== DO NOT CHANGE ANYTHING BELOW THIS LINE ========== */
 /* Global Constants */
 const myPostKey = document.getElementsByTagName('head')[0].innerHTML.split('my_post_key = "')[1].split('";')[0];
-const bjAdvisorURL = "https://blackjackdoc.com/calculator/advisor.json.php";
+const bjAdvisorURL = "https://cors-anywhere.herokuapp.com/blackjackdoc.com/calculator/advisor.json.php"; // Proxy data through CORS Anywhere
 const hfActionDealURL = "https://hackforums.net/blackjack/blackjack_action.php?action=deal";
 const hfActionStandURL = "https://hackforums.net/blackjack/blackjack_action.php?action=stand";
 const hfActionHitURL = "https://hackforums.net/blackjack/blackjack_action.php?action=hit";

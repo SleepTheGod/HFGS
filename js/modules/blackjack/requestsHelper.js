@@ -50,11 +50,18 @@ function advisorPostRequest(url, data) {
     //
     $.ajax({
         type: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            'Accept': "application/json, text/javascript, */*; q=0.01",
+            "X-Requested-With": "XMLHttpRequest"
+        },
         url: url,
         data: data,
+        crossDomain: true,
         async: false,
-        success: function (data) {
-            var jsonObj = jQuery.parseJSON(data);
+        success: function (result, textStatus, jqXHR) {
+            console.log("result: ", result);
+            var jsonObj = jQuery.parseJSON(result);
             console.log("BEST OPTION: " + jsonObj.best);
             setHandResult(jsonObj.best);
             setOddsDisplay(getActionOdds(jsonObj));
